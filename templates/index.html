@@ -1,0 +1,138 @@
+<!-- html file code for main page -->
+<!DOCTYPE html>
+<html>
+<title>Blockchain</title>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">   
+</head>
+
+<!-- <style>
+    h1{
+        background-color: rgb(125, 218, 247);
+        color: black;
+        margin: 0;
+        padding-top: 20px;
+        height: 70px;
+    }
+    a:link, a:visited{
+        width: 25%;
+        background-color: rgb(8, 73, 52);
+        color: floralwhite;
+        padding: 14px 25px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+    }
+</style> -->
+
+<body>
+
+    <!-- <h1 style="text-align: center;">Web Based Blockchain</h1>
+
+    <p><a href="/mine_block">Mine a new block in Blockchain</a></p>
+    <p><a href="/get_chain">View Blockchain</a></p>
+    <p><a href="/is_valid">Check blockchain validity</a></p> -->
+
+    <h1>Web Based Blockchain</h1>
+
+    <!-- <p><a href="/mine_block">Mine a new block in Blockchain</a></p>
+    <p><a href="/get_chain">View Blockchain</a></p> -->
+    <p><a href="/display_block">Mine a new block in Blockchain</a></p>
+    <p><a href="/display_chain">View Blockchain</a></p>
+    <p><a href="/is_valid">Check blockchain validity</a></p>
+
+</body>
+
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .block {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .block h3 {
+            margin: 0;
+        }
+
+        .block .details {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Blockchain App</h1>
+
+    <button onclick="mineBlock()">Mine a Block</button>
+
+    Display Block Data Here
+    <div id="blockData"></div>
+
+    <h2>Blockchain</h2>
+    <div id="chainData"></div>
+
+    <script>
+        // Function to call the '/mine_block' API and display the mined block's details
+        function mineBlock() {
+            fetch('/mine_block')
+                .then(response => response.json())
+                .then(data => {
+                    const blockDataDiv = document.getElementById('blockData');
+                    blockDataDiv.innerHTML = `
+                        <div class="block">
+                            <h3>Block ${data.index} Mined</h3>
+                            <p>Timestamp: ${data.timestamp}</p>
+                            <p>Proof: ${data.proof}</p>
+                            <p>Previous Hash: ${data.previous_hash}</p>
+                        </div>
+                    `;
+                })
+                .catch(error => console.error('Error mining block:', error));
+        }
+
+        // Function to call the '/get_chain' API and display the entire blockchain
+        function getChain() {
+            fetch('/get_chain')
+                .then(response => response.json())
+                .then(data => {
+                    const chainDataDiv = document.getElementById('chainData');
+                    chainDataDiv.innerHTML = ''; // Clear previous data
+                    data.chain.forEach(block => {
+                        chainDataDiv.innerHTML += `
+                            <div class="block">
+                                <h3>Block ${block.index}</h3>
+                                <p>Timestamp: ${block.timestamp}</p>
+                                <p>Proof: ${block.proof}</p>
+                                <p>Previous Hash: ${block.previous_hash}</p>
+                            </div>
+                        `;
+                    });
+                })
+                .catch(error => console.error('Error fetching chain:', error));
+        }
+
+        // Load the blockchain when the page is loaded
+        window.onload = function () {
+            getChain();
+        };
+    </script>
+</body>
+
+</html> -->

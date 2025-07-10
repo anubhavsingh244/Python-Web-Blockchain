@@ -1,0 +1,37 @@
+version: '3.8' # Specify the Docker Compose file format version
+
+services:
+  # Service for your Flask web application
+  web:
+    # Build the image from the Dockerfile in the current directory
+    build: .
+    # Map port 5000 on the host to port 5000 in the container
+    ports:
+      - "5000:5000"
+    # Mount the current directory into the container for development
+    # This allows code changes on your host to be reflected instantly in the container
+    # without rebuilding the image. Remove or comment out for production.
+    volumes:
+      - .:/app
+    # Set environment variables (e.g., for Flask or database connection)
+    environment:
+      FLASK_ENV: development # Set Flask to development mode (optional)
+      # DATABASE_URL: postgresql://user:password@db:5432/mydatabase # Example for a future database
+    # Command to run your Flask application using Gunicorn
+    # This overrides the CMD in the Dockerfile if present, but for Gunicorn, it's consistent.
+    command: gunicorn --bind 0.0.0.0:5000 app:app # Make sure 'app:app' matches your Flask app instance
+
+  # Example of a future database service (currently commented out)
+  # db:
+  #   image: postgres:13-alpine # Use a lightweight PostgreSQL image
+  #   environment:
+  #     POSTGRES_DB: mydatabase
+  #     POSTGRES_USER: user
+  #     POSTGRES_PASSWORD: password
+  #   volumes:
+  #     - db_data:/var/lib/postgresql/data # Persist database data
+  #   restart: always # Always restart if it stops
+
+# Define volumes for data persistence (e.g., for databases)
+volumes:
+  db_data: # This volume is for the 'db' service example

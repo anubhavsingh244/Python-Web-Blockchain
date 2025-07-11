@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+    spec:
+      containers:
+      - name: flask-app-container
+        image: my-flask-app:1.0
+        ports:
+        - containerPort: 5000
+        env:
+        - name: FLASK_ENV
+          value: production
+        resources: # <<< ADD THIS SECTION
+          requests:
+            memory: "256Mi" # Request 256 Megabytes of RAM
+            cpu: "1000m"  # Request 1 full CPU core
+          limits:
+            memory: "512Mi" # Limit to 512 Megabytes of RAM
+            cpu: "2000m"  # Limit to 2 CPU cores (adjust based on your host's available cores)

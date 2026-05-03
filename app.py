@@ -15,7 +15,7 @@ import json
 # Flask is for creating the web 
 # app and jsonify is for 
 # displaying the blockchain 
-from flask import Flask, jsonify, render_template, url_for
+from flask import Flask, jsonify, render_template
   
   
 class Blockchain: 

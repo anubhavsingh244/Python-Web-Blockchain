@@ -48,10 +48,11 @@ class Blockchain:
     def proof_of_work(self, previous_proof): 
         new_proof = 1
         check_proof = False
+        previous_proof_sq = previous_proof**2
           
         while check_proof is False: 
             hash_operation = hashlib.sha256( 
-                str(new_proof**2 - previous_proof**2).encode()).hexdigest() 
+                str(new_proof**2 - previous_proof_sq).encode()).hexdigest()
             if hash_operation[:5] == '00000': 
                 check_proof = True
             else: 

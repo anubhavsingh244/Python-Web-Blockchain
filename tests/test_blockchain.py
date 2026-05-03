@@ -1,25 +1,33 @@
 import sys
 import datetime
+import pytest
 from unittest.mock import MagicMock
 
-# Mock flask because it's not installed in the isolated environment where pytest runs
-flask_mock = MagicMock()
-def route_mock(*args, **kwargs):
-    def decorator(f):
-        return f
-    return decorator
+@pytest.fixture(autouse=True)
+def mock_flask(monkeypatch):
+    """Mock flask because it's not installed in the isolated environment where pytest runs."""
+    flask_mock = MagicMock()
+    def route_mock(*args, **kwargs):
+        def decorator(f):
+            return f
+        return decorator
 
-flask_mock.Flask.return_value.route = route_mock
-flask_mock.jsonify = lambda x: x
-flask_mock.render_template = lambda *args, **kwargs: ""
-flask_mock.url_for = lambda *args, **kwargs: ""
+    flask_mock.Flask.return_value.route = route_mock
+    flask_mock.jsonify = lambda x: x
+    flask_mock.render_template = lambda *args, **kwargs: ""
+    flask_mock.url_for = lambda *args, **kwargs: ""
 
-sys.modules['flask'] = flask_mock
+    monkeypatch.setitem(sys.modules, 'flask', flask_mock)
 
-from app import Blockchain
+    # Also we need to import Blockchain inside the test or yield to allow app.py to import the mocked flask
+    # If we import at the top level, it fails because fixture is not yet applied
+    # Let's yield and then the test can import, or better, we just reload the module if necessary.
+    # Actually, importing inside the test function works best to ensure it imports with the mock.
+    yield
 
 def test_create_block_increases_length():
     """Test that creating a block increases the chain length."""
+    from app import Blockchain
     b = Blockchain()
     initial_length = len(b.chain)
 
@@ -29,6 +37,7 @@ def test_create_block_increases_length():
 
 def test_create_block_attributes():
     """Test that the block created has the correct attributes."""
+    from app import Blockchain
     b = Blockchain()
 
     # create_block is already called once in __init__ (genesis block)
@@ -52,6 +61,7 @@ def test_create_block_attributes():
 
 def test_create_multiple_blocks():
     """Test creating multiple blocks successively."""
+    from app import Blockchain
     b = Blockchain()
 
     b.create_block(proof=10, previous_hash='hash1')

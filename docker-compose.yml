@@ -15,7 +15,7 @@ services:
       - .:/app
     # Set environment variables (e.g., for Flask or database connection)
     environment:
-      FLASK_ENV: development # Set Flask to development mode (optional)
+      FLASK_ENV: production # Set Flask environment to production
       # DATABASE_URL: postgresql://user:password@db:5432/mydatabase # Example for a future database
     # Command to run your Flask application using Gunicorn
     # This overrides the CMD in the Dockerfile if present, but for Gunicorn, it's consistent.

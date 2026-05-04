@@ -15,7 +15,10 @@ import json
 # Flask is for creating the web 
 # app and jsonify is for 
 # displaying the blockchain 
+
+import os
 from flask import Flask, jsonify, render_template
+from flask_sqlalchemy import SQLAlchemy
   
   
 class Blockchain: 
@@ -87,6 +90,10 @@ class Blockchain:
 # Creating the Web 
 # App using flask 
 app = Flask(__name__) 
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
   
 # Create the object 
 # of the class blockchain 

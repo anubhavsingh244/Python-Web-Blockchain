@@ -105,7 +105,7 @@ def home_page():
     return render_template('index.html')
   
 # Mining a new block 
-@app.route('/mine_block', methods=['GET']) 
+@app.route('/mine_block', methods=['POST'])
 def mine_block(): 
     print('1')
     previous_block = blockchain.print_previous_block() 

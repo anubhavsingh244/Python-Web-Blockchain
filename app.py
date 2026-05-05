@@ -131,7 +131,6 @@ def mine_block():
 # Display mined block in html
 @app.route('/display_block', methods=['GET']) 
 def display_block(): 
-    # mine_block()
     return render_template('mine_block.html')
   
 # Display blockchain in json format 

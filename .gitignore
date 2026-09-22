@@ -22,4 +22,4 @@ instance/
 
 # Operating System Files
 .DS_Store
-Thumbs.db
+Thumbs.dbapp_output.log

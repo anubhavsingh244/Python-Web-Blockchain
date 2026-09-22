@@ -1,7 +1,7 @@
  // Function to call the '/mine_block' API and display the mined block's details
 
 function mineBlock() {
-    fetch('/mine_block')
+    fetch('/mine_block', { method: 'POST' })
         .then(response => response.json())
         .then(data => {
             console.log(data+'RandomString');
@@ -25,7 +25,7 @@ window.onload = function() {
 /* //Event on ready DOM
 document.addEventListener("DOMContentLoaded", function () {
     //Fetch data
-    fetch('/mine_block')
+    fetch('/mine_block', { method: 'POST' })
         .then((response) => response.json())
         .then((json) => {
             //Then json info is here

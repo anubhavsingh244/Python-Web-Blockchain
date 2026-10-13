@@ -1,0 +1,62 @@
+# Base44 sandbox/dev compose for this project.
+# Runs the Flask app FROM THE CLONED SOURCE with live reload, plus the Postgres
+# service the app expects (DATABASE_URL is required at import time).
+#   docker compose -f docker-compose.base44.yml up -d --build
+services:
+  web:
+    # Plain runtime image (NOT the project's Dockerfile) so edits are visible
+    # immediately; dependencies are installed from requirements.txt on startup.
+    image: python:3.12-slim
+    working_dir: /app
+    ports:
+      - "3000:5000"
+    volumes:
+      - .:/app
+    environment:
+      # Local infrastructure credential we generate ourselves (not a user secret).
+      # Driver pinned to psycopg2 because requirements.txt ships psycopg2-binary
+      # (a bare postgresql:// URL would make SQLAlchemy look for psycopg v3).
+      DATABASE_URL: postgresql+psycopg2://blockchain:blockchain@db:5432/blockchain
+      FLASK_DEBUG: "1"
+      PYTHONUNBUFFERED: "1"
+    # Install deps from the mounted checkout, then run the live-reloading dev server.
+    command:
+      - sh
+      - -ec
+      - |
+        pip install --no-cache-dir -r requirements.txt
+        exec flask --app app run --host=0.0.0.0 --port=5000 --debug
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      # Read-only probe of the real app (curl is not present in the python image).
+      test:
+        - CMD-SHELL
+        - >-
+          python -c "import urllib.request,sys;
+          sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:5000/', timeout=3).status == 200 else 1)"
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 60s
+    restart: on-failure
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: blockchain
+      POSTGRES_USER: blockchain
+      POSTGRES_PASSWORD: blockchain
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U blockchain -d blockchain"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: on-failure
+
+volumes:
+  db_data:

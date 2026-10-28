@@ -1,5 +1,5 @@
 # Use a lightweight Python base image
-FROM python:3.9-slim-buster
+FROM python:3.12-slim
 
 # Create a non-root user
 RUN useradd -m appuser

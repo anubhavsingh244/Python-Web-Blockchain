@@ -13,9 +13,10 @@ services:
     # without rebuilding the image. Remove or comment out for production.
     volumes:
       - .:/app
-    # Set environment variables (e.g., for Flask or database connection)
+    # Set environment variables (e.g., for database connection).
+    # FLASK_ENV is intentionally not set: Flask 2.3+ ignores it, and the app
+    # runs under Gunicorn (no debug mode) rather than the Flask dev server.
     environment:
-      FLASK_ENV: development # Set Flask to development mode (optional)
       DATABASE_URL: ${DATABASE_URL}
     # Command to run your Flask application using Gunicorn
     # This overrides the CMD in the Dockerfile if present, but for Gunicorn, it's consistent.

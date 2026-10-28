@@ -131,3 +131,10 @@ def test_chain_valid_returns_false_for_mutated_previous_block_data():
     # Mutating block 0 changes its hash, so block 1's previous_hash no longer matches
     bc.chain[0]['proof'] = 999
     assert bc.chain_valid(bc.chain) is False
+
+def test_hash_proof_matches_expected_digest():
+    """hash_proof hashes the difference of the squared proofs."""
+    from app import Blockchain
+    b = Blockchain()
+    expected = hashlib.sha256(str(7**2 - 3**2).encode()).hexdigest()
+    assert b.hash_proof(7, 3) == expected

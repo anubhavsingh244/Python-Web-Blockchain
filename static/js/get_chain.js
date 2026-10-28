@@ -5,14 +5,26 @@ function getChain() {
             const chainDataDiv = document.getElementById('chainData');
             chainDataDiv.innerHTML = ''; // Clear previous data
             data.chain.forEach(block => {
-                chainDataDiv.innerHTML += `
-                    <div class="block">
-                        <h3>Block ${block.index}</h3>
-                        <p>Timestamp: ${block.timestamp}</p>
-                        <p>Proof: ${block.proof}</p>
-                        <p>Previous Hash: ${block.previous_hash}</p>
-                    </div>
-                `;
+                const blockDiv = document.createElement('div');
+                blockDiv.className = 'block';
+
+                const h3 = document.createElement('h3');
+                h3.textContent = `Block ${block.index}`;
+                blockDiv.appendChild(h3);
+
+                const pTimestamp = document.createElement('p');
+                pTimestamp.textContent = `Timestamp: ${block.timestamp}`;
+                blockDiv.appendChild(pTimestamp);
+
+                const pProof = document.createElement('p');
+                pProof.textContent = `Proof: ${block.proof}`;
+                blockDiv.appendChild(pProof);
+
+                const pPrevHash = document.createElement('p');
+                pPrevHash.textContent = `Previous Hash: ${block.previous_hash}`;
+                blockDiv.appendChild(pPrevHash);
+
+                chainDataDiv.appendChild(blockDiv);
             });
         })
         .catch(error => console.error('Error fetching chain:', error));

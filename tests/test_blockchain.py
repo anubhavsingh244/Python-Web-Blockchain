@@ -99,3 +99,35 @@ def test_proof_of_work_different_previous():
     # Verify the proof generates a valid hash
     hash_operation = hashlib.sha256(str(new_proof**2 - previous_proof**2).encode()).hexdigest()
     assert hash_operation[:5] == '00000'
+
+def _build_chain(blocks=2):
+    """Return a Blockchain with `blocks` valid mined blocks after genesis."""
+    from app import Blockchain
+    bc = Blockchain()
+    for _ in range(blocks):
+        prev_block = bc.print_previous_block()
+        proof = bc.proof_of_work(prev_block['proof'])
+        bc.create_block(proof, bc.hash(prev_block))
+    return bc
+
+def test_chain_valid_returns_true_for_valid_chain():
+    bc = _build_chain()
+    assert bc.chain_valid(bc.chain) is True
+
+def test_chain_valid_returns_false_for_corrupted_hash():
+    bc = _build_chain()
+    # Corrupt the previous_hash reference in block 1
+    bc.chain[1]['previous_hash'] = 'corrupted_hash'
+    assert bc.chain_valid(bc.chain) is False
+
+def test_chain_valid_returns_false_for_corrupted_proof():
+    bc = _build_chain()
+    # Corrupt the proof in block 1 so hash operation won't start with 00000
+    bc.chain[1]['proof'] = 123456789
+    assert bc.chain_valid(bc.chain) is False
+
+def test_chain_valid_returns_false_for_mutated_previous_block_data():
+    bc = _build_chain()
+    # Mutating block 0 changes its hash, so block 1's previous_hash no longer matches
+    bc.chain[0]['proof'] = 999
+    assert bc.chain_valid(bc.chain) is False

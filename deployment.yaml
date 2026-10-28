@@ -20,6 +20,15 @@ spec:
         env:
         - name: FLASK_ENV
           value: production
+        # app.py reads DATABASE_URL at import time and fails without it.
+        # Create the secret first, e.g.:
+        #   kubectl create secret generic flask-app-db \
+        #     --from-literal=database-url='postgresql://user:password@host:5432/dbname'
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: flask-app-db
+              key: database-url
         resources: # <<< ADD THIS SECTION
           requests:
             memory: "256Mi" # Request 256 Megabytes of RAM

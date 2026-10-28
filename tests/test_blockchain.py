@@ -1,5 +1,6 @@
 import sys
 import datetime
+import hashlib
 import pytest
 from unittest.mock import MagicMock
 
@@ -76,3 +77,25 @@ def test_create_multiple_blocks():
     assert b.chain[1]['previous_hash'] == 'hash1'
     assert b.chain[2]['previous_hash'] == 'hash2'
     assert b.chain[3]['previous_hash'] == 'hash3'
+
+def test_proof_of_work_basic():
+    """Test proof of work with the initial block's proof."""
+    from app import Blockchain
+    b = Blockchain()
+    previous_proof = 1
+    new_proof = b.proof_of_work(previous_proof)
+
+    # Verify the proof generates a valid hash
+    hash_operation = hashlib.sha256(str(new_proof**2 - previous_proof**2).encode()).hexdigest()
+    assert hash_operation[:5] == '00000'
+
+def test_proof_of_work_different_previous():
+    """Test proof of work with an arbitrary previous proof."""
+    from app import Blockchain
+    b = Blockchain()
+    previous_proof = 533
+    new_proof = b.proof_of_work(previous_proof)
+
+    # Verify the proof generates a valid hash
+    hash_operation = hashlib.sha256(str(new_proof**2 - previous_proof**2).encode()).hexdigest()
+    assert hash_operation[:5] == '00000'
